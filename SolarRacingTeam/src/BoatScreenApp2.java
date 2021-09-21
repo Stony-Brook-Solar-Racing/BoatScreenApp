@@ -16,22 +16,17 @@ public class BoatScreenApp extends Application{
 		
 		double VMIN = 11.374444;
 		double VMAX = 12.73;
-		double voltage = 12.73;											// Voltage Sensor
+		double voltage = 12.73;										// Voltage Sensor
 		int battery = (int)((voltage - VMIN) / (VMAX - VMIN) * 100);	
 		
-		double resistance = 10; 											// Resistance Sensor
+		double resistance = 10; 									// Resistance Sensor
 
-		double power = Math.round(voltage * voltage / resistance * 100);	// Solar Power output
+		double power = Math.round(voltage * voltage / resistance * 100);				// Solar Power output
 		power = power / 100;
 		
-		double speed = 1.5;													// Motor RPM measured by Tachometer
+		double speed = 1.5;										// Motor RPM measured by Tachometer
 
-		//graph of power vs time
-		
-		//System.out.print(Font.getFontNames());
-		for (int i = 0; i < 50; i++) {
-			System.out.println((Font.getFontNames().get(i)));
-		}
+		//still need graph of power vs time
 		
 		
 		//Speed Graphic
