@@ -29,7 +29,7 @@ public class BoatScreenApp extends Application{
 		//graph of power vs time
 		
 		//System.out.print(Font.getFontNames());
-		for (int i = 0; i < 50; i++) {
+		for (int i = 50; i < 200; i++) {
 			System.out.println((Font.getFontNames().get(i)));
 		}
 		
@@ -81,10 +81,10 @@ public class BoatScreenApp extends Application{
 		
 		//Title Rectangle
 		Rectangle rect = new Rectangle(0, 0, 600, 50);
-		rect.setFill(Color.CORAL);
+		rect.setFill(Color.AQUAMARINE);
 		
 		Label title = new Label("Stony Brook Solar Racing");
-		title.setFont(Font.font("Arial Rounded MT Bold", 30));
+		title.setFont(Font.font("Galvji", 30));
 		title.setTextFill(Color.BLACK);
 		
 		StackPane title_pane = new StackPane();
@@ -97,8 +97,8 @@ public class BoatScreenApp extends Application{
 		
 		Color light_orange = new Color(1.00, 0.76, 0.3, 1.0);
 		Rectangle rect_middle = new Rectangle(0, 50, 600, 100);
-		rect_middle.setFill(Color.WHITE);
-		rect_middle.setStroke(Color.CORAL);
+		rect_middle.setFill(Color.LIGHTGREY);
+		rect_middle.setStroke(Color.AQUAMARINE);
 		rect_middle.setStrokeWidth(2);		
 		Pane background = new Pane();
 		background.getChildren().addAll(rect_bg, rect_middle);
