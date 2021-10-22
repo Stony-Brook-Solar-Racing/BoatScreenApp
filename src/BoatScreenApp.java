@@ -21,7 +21,7 @@ public class BoatScreenApp extends Application {
 	public void start(Stage primaryStage) {
 
 		// Connect to MongoDB
-		MongoClient client = MongoClients.create("mongodb+srv://admin:<password>@solarracingdata.hzvpo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
+		MongoClient client = MongoClients.create("mongodb+srv://admin:boatadmin@solarracingdata.hzvpo.mongodb.net/SolarRacingData?retryWrites=true&w=majority");
 		MongoDatabase database = client.getDatabase("SolarRacingData");
 		MongoCollection<Document> boatData = database.getCollection("BoatData");
 		
