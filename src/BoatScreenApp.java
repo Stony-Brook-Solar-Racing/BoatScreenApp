@@ -1,13 +1,19 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 
+import static com.mongodb.client.model.Sorts.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -16,6 +22,11 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
 public class BoatScreenApp extends Application {
+
+	// Sensor readings
+	double voltage = 12.73; // Voltage Sensor
+	double resistance = 10; // Resistance Sensor
+	double rpm = 1.5; // Motor RPM measured by Tachometer
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -23,33 +34,27 @@ public class BoatScreenApp extends Application {
 		// Connect to MongoDB
 		MongoClient client = MongoClients.create("mongodb+srv://admin:boatadmin@solarracingdata.hzvpo.mongodb.net/SolarRacingData?retryWrites=true&w=majority");
 		MongoDatabase database = client.getDatabase("SolarRacingData");
-		MongoCollection<Document> boatData = database.getCollection("BoatData");
+		MongoCollection<Document> rpmData = database.getCollection("RPM");
 		
 		final double VMIN = 11.374444;
 		final double VMAX = 12.73;
-		double voltage = 12.73; // Voltage Sensor
 		int battery = (int)((voltage - VMIN) / (VMAX - VMIN) * 100);	
-		
-		double resistance = 10; // Resistance Sensor
 
 		double power = Math.round(voltage * voltage / resistance * 100) / 100; // Solar Power output
 		
-		double speed = 1.5; // Motor RPM measured by Tachometer
-		
 		// Speed Graphic
-		Circle speedCircle = new Circle();
-		speedCircle.setRadius(90);
-		speedCircle.setStroke(Color.LIGHTBLUE);
-		speedCircle.setStrokeWidth(2);
-		speedCircle.setFill(Color.WHITE);
+		Circle rpmCircle = new Circle();
+		rpmCircle.setRadius(90);
+		rpmCircle.setStroke(Color.LIGHTBLUE);
+		rpmCircle.setStrokeWidth(2);
+		rpmCircle.setFill(Color.WHITE);
 		
-		Label speedLabel = new Label("Speed: " + speed + " MPH");
-		speedLabel.setTextFill(Color.BLACK);
-		speedLabel.setFont(Font.font("San Francisco", 18));
+		Label rpmLabel = new Label("Motor RPM: " + rpm);
+		rpmLabel.setTextFill(Color.BLACK);
+		rpmLabel.setFont(Font.font("San Francisco", 18));
 		
-		StackPane speedPane = new StackPane();
-		speedPane.getChildren().addAll(speedCircle, speedLabel);
-		
+		StackPane rpmPane = new StackPane();
+		rpmPane.getChildren().addAll(rpmCircle, rpmLabel);
 		
 		// Battery Power (percentage) Graphic
 		Circle batteryCircle = new Circle();
@@ -104,15 +109,39 @@ public class BoatScreenApp extends Application {
 		Pane background = new Pane();
 		background.getChildren().addAll(rectBackground, rectMiddle);
 		
-		speedPane.setLayoutX(100-90);
-		speedPane.setLayoutY(175-90);
+		rpmPane.setLayoutX(100-90);
+		rpmPane.setLayoutY(175-90);
 		batteryPane.setLayoutX(300-90);
 		batteryPane.setLayoutY(175-90);
 		powerPane.setLayoutX(500-90);
 		powerPane.setLayoutY(175-90);
 		
 		Pane overall = new Pane();
-		overall.getChildren().addAll(titlePane, background, speedPane, batteryPane, powerPane);
+		overall.getChildren().addAll(titlePane, background, rpmPane, batteryPane, powerPane);
+
+		// Setup Auto-Update
+		Timeline update = new Timeline(
+			new KeyFrame(
+				Duration.seconds(1),
+				new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						// Update RPM
+						double newRPM = Double.valueOf(rpmData.find().sort(descending("_id")).first().get("RPM").toString());
+						if (newRPM != rpm) {
+							rpmLabel.setText("Motor RPM: " + newRPM);
+							rpm = newRPM;
+						}
+						// TODO: Update Battery
+						// TODO: Update Power
+					}
+				}
+			)
+		);
+		update.setCycleCount(Timeline.INDEFINITE);
+		update.play();
+
+		// Set scene
 		
 		Scene scene = new Scene(overall, 600, 400);
 		
