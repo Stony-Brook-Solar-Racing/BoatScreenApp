@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -27,12 +31,24 @@ public class BoatScreenApp extends Application {
 	double voltage = 12.73; // Voltage Sensor
 	double resistance = 10; // Resistance Sensor
 	double rpm = 1.5; // Motor RPM measured by Tachometer
+	String mongoURI = "";
 	
 	@Override
 	public void start(Stage primaryStage) {
 
+		try {
+			File auth = new File("auth.txt");
+			Scanner input = new Scanner(auth);
+			mongoURI = input.nextLine();
+			input.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("File was not found.");
+			e.printStackTrace();
+			return;
+		}
+
 		// Connect to MongoDB
-		MongoClient client = MongoClients.create("mongodb+srv://admin:boatadmin@solarracingdata.hzvpo.mongodb.net/SolarRacingData?retryWrites=true&w=majority");
+		MongoClient client = MongoClients.create(mongoURI);
 		MongoDatabase database = client.getDatabase("SolarRacingData");
 		MongoCollection<Document> rpmData = database.getCollection("RPM");
 		
