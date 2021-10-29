@@ -26,3 +26,6 @@ hs_err_pid*
 lib
 bin
 .vscode
+
+# Secret Stuff
+auth.txt
