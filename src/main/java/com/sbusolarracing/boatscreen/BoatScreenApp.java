@@ -28,13 +28,12 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
-
+/*
 public class BoatScreenApp extends Application {
 
     // Sensor readings
     double voltage = 12.73; // Voltage Sensor
     double resistance = 10; // Resistance Sensor
-    double rpm = 1.5; // Motor RPM measured by Tachometer
     String mongoURI = "";
 
     @Override
@@ -103,7 +102,6 @@ public class BoatScreenApp extends Application {
 
         StackPane powerPane = new StackPane();
         powerPane.getChildren().addAll(powerCircle, powerLabel);
-
 
         // Title Rectangle
         Rectangle rect = new Rectangle(0, 0, 600, 50);
@@ -175,13 +173,17 @@ public class BoatScreenApp extends Application {
     }
 
 }
-/*
-public class HelloApplication extends Application {
+
+ */
+
+public class BoatScreenApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        FXMLLoader fxmlLoader = new FXMLLoader(BoatScreenApp.class.getResource("hello-view.fxml"));
+        //BoatScreenController controller = (BoatScreenController) fxmlLoader.getController();
+        //controller.setRpmLabel(getRPM());
+        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        stage.setTitle("Boat Speed App");
         stage.setScene(scene);
         stage.show();
     }
@@ -189,6 +191,9 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
         launch();
     }
-}
 
- */
+    public static double getRPM(){
+        double rpm = 1.5; // Motor RPM measured by Tachometer
+        return rpm;
+    }
+}
