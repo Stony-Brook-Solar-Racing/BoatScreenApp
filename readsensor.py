@@ -1,3 +1,4 @@
+import adafruit_gps
 import board
 import busio
 import pymongo
@@ -13,6 +14,12 @@ if __name__ == "__main__":
 	db = client.SolarRacingData
 	rpm = db.RPM
 	
+	# I2C Modules: Configuration and Setup
+	i2c = board.I2C()
+	gps = adafruit_gps.GPS_GtopI2C(i2c)
+	gps.send_command(b"PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
+	gps.send_command(b"PMTK220,1000")
+
 	# Setup GPIO pins
 	GPIO.setmode(GPIO.BOARD)
 	GPIO.setup(29, GPIO.IN) # GPIO 5
@@ -22,7 +29,11 @@ if __name__ == "__main__":
 	GPIO.setup(18, GPIO.OUT) # GPIO 24
 	
 	# Testing
-	print(rpm.find().sort('ISOString', pymongo.DESCENDING)[0]);
+	while True:
+		data = gps.read(32)
+
+		if data is not None:
+			print("".join([chr(b) for b in data]))
 	
 	# Clear GPIO configurations and terminate
 	GPIO.cleanup()
