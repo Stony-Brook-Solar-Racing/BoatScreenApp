@@ -21,18 +21,21 @@ if __name__ == "__main__":
 	gps.send_command(b"PMTK220,1000")
 
 	# Setup GPIO pins
+	"""
 	GPIO.setmode(GPIO.BOARD)
 	GPIO.setup(29, GPIO.IN) # GPIO 5
 	GPIO.setup(31, GPIO.OUT) # GPIO 6
 	GPIO.setup(26, GPIO.OUT) # GPIO 7
 	GPIO.setup(16, GPIO.OUT) # GPIO 23
 	GPIO.setup(18, GPIO.OUT) # GPIO 24
+	"""
 	
 	# Testing
 	while True:
 		data = gps.read(32)
-
-		if data is not None:
+		if not gps.has_fix:
+			print("GPS has no fix!")
+		elif data is not None:
 			print("".join([chr(b) for b in data]))
 	
 	# Clear GPIO configurations and terminate
