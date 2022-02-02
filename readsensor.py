@@ -21,15 +21,17 @@ if __name__ == "__main__":
 	gps.send_command(b"PMTK220,1000")
 
 	# Setup GPIO pins
-	"""
+	
 	GPIO.setmode(GPIO.BOARD)
 	GPIO.setup(29, GPIO.IN) # GPIO 5
 	GPIO.setup(31, GPIO.OUT) # GPIO 6
 	GPIO.setup(26, GPIO.OUT) # GPIO 7
 	GPIO.setup(16, GPIO.OUT) # GPIO 23
 	GPIO.setup(18, GPIO.OUT) # GPIO 24
-	"""
 	
+	HIGH = True
+	LOW = False
+
 	# Testing
 	while True:
 		data = gps.read(32)
@@ -37,6 +39,28 @@ if __name__ == "__main__":
 			print("GPS has no fix!")
 		elif data is not None:
 			print("".join([chr(b) for b in data]))
-	
+		print("TEST DATA")
+		print(GPIO.input(29))
+		time.sleep(5)
+		GPIO.output(24, FALSE)
+		GPIO.output(23, FALSE)
+		print("S1+")
+		print(GPIO.input(29))
+		time.sleep(5)
+		GPIO.output(24, FALSE)
+		GPIO.output(23, TRUE)
+		print("S1-")
+		print(GPIO.input(29))
+		time.sleep(5)
+		GPIO.output(24, TRUE)
+		GPIO.output(23, FALSE)
+		print("S2+")
+		print(GPIO.input(29))
+		time.sleep(5)
+		GPIO.output(24, TRUE)
+		GPIO.output(23, TRUE)
+		print("S2-")
+		print(GPIO.input(29))
+		time.sleep(5)
 	# Clear GPIO configurations and terminate
 	GPIO.cleanup()
