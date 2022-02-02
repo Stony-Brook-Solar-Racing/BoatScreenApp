@@ -1,5 +1,8 @@
+import board
+import busio
 import pymongo
 import RPi.GPIO as GPIO
+import time
 from datetime import datetime
 
 if __name__ == "__main__":
