@@ -4,8 +4,8 @@ Java Boat Screen Application
 
 Instructions for running the application
 
-1. Create and place "auth.txt" into the resources folder populated with the mongodb connection string
-2. Build and run the java application
+1. Create and place "auth.txt" into the data folder populated with the mongodb connection string
+2. Compile and run the application
 
 Steps to get started with development
 
