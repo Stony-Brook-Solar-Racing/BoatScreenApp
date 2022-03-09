@@ -10,11 +10,11 @@ from datetime import datetime
 
 if __name__ == "__main__":
 	# Setup MongoDB connection
-	with open('auth.txt') as f:
+	with open('data/databaseurl.txt') as f:
 		mongodb_uri = f.readline()
-	#client = pymongo.MongoClient(mongodb_uri)
-	#db = client.SolarRacingData
-	#rpm = db.RPM
+	client = pymongo.MongoClient(mongodb_uri)
+	db = client.SolarRacingData
+	collection = db.Voltage
 	
 	# I2C Modules: Configuration and Setup
 	i2c = busio.I2C(board.SCL, board.SDA)
@@ -72,6 +72,7 @@ if __name__ == "__main__":
 			GPIO.output(16, LOW)
 			GPIO.output(18, LOW)
 			print("S1+: ", ads_channel.value)
+			s1plus = ads_channel.value
 			GPIO.output(16, HIGH)
 			GPIO.output(18, LOW)
 			print("S1-: ", ads_channel.value)
@@ -81,11 +82,16 @@ if __name__ == "__main__":
 			print("Voltage: ", voltage)
 			GPIO.output(16, LOW)
 			GPIO.output(18, HIGH)
+			s2plus = ads_channel.value
 			print("S2+: ", ads_channel.value)
 			GPIO.output(16, HIGH)
 			GPIO.output(18, HIGH)
+			s2minus = ads_channel.value
 			print("S2-: ", ads_channel.value)
 			print("-" * 20 + "\n")
+			rawvoltage = {'voltage':voltage,'s1minus':s1minus,'s1plus':s1plus,
+			's2minus':s2minus,'s2plus':s2plus,'ISOString':datetime.now().isoformat()}
+			collection.insert_one(rawvoltage)
 			time.sleep(1)
 	finally:
 		# Clear GPIO configurations and terminate

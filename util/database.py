@@ -9,3 +9,12 @@ def get_rpm():
     collection = db['RPM']
     rpm = collection.find().sort('ISOString', pymongo.DESCENDING)[0]
     return rpm
+
+def get_voltage():
+    f = open('./data/databaseurl.txt', 'r')
+    URL = f.read()
+    client = MongoClient(URL)
+    db = client["SolarRacingData"]
+    collection = db['Voltage']
+    voltage = collection.find().sort('ISOString', pymongo.DESCENDING)[0]
+    return voltage
