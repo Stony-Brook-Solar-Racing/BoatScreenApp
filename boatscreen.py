@@ -23,12 +23,25 @@ s2minus_label.pack()
 s2plus_label = tkinter.Label(screen, text='Voltage: 0')
 s2plus_label.pack()
 
+running = True
+
+def clickStartStopButton():
+    global running
+    if running:
+        running = False
+        #print(running)
+    else: 
+        running = True
+        #print(running)
+
+startStopButton = tkinter.Button(text="Start/Stop", command=clickStartStopButton)
+startStopButton.place(x=100, y=100)
+
 def update_rpm():
     rpm = database.get_rpm()
     rpm_label['text'] = 'RPM : ' + str(rpm['RPM'])
     print(rpm)
     print(rpm_label)
-    screen.after(1000, update_rpm)
 
 def update_voltage():
     voltage = database.get_voltage()
@@ -39,9 +52,15 @@ def update_voltage():
     s2minus_label['text'] = 'S2- ' + str(voltage['s2minus'])
     print(voltage)
     print(voltage_label)
-    screen.after(1000, update_voltage)
 
-update_rpm()
-update_voltage()
+def scanning():
+    if running:
+        update_rpm()
+        update_voltage()
+    else:
+        print("Stopped")
 
+    screen.after(1000, scanning)
+
+screen.after(1000, scanning)
 screen.mainloop()
