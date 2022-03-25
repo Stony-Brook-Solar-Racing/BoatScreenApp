@@ -27,7 +27,7 @@ s2plus_label.pack()
 
 running = True
 reading = True
-process = Popen("python /readsensor.py")
+process = Popen("python ./readsensor.py")
 
 def clickStartStopButton():
     global running
