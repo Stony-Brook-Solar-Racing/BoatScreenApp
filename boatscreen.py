@@ -1,9 +1,11 @@
 import tkinter
 from util import database
+from subprocess import Popen
 
 screen = tkinter.Tk()
 
 screen.title("Solar Boat Screen")
+screen.geometry("500x500")
 
 rpm_label = tkinter.Label(screen, text='RPM: 0')
 rpm_label.pack()
@@ -24,6 +26,8 @@ s2plus_label = tkinter.Label(screen, text='Voltage: 0')
 s2plus_label.pack()
 
 running = True
+reading = True
+process = Popen("python /readsensor.py")
 
 def clickStartStopButton():
     global running
@@ -34,8 +38,21 @@ def clickStartStopButton():
         running = True
         #print(running)
 
+def clickStartStopSensor():
+    global reading
+    global process
+    if reading:
+        reading = False
+        process.terminate()
+    else:
+        process = Popen("python /readsensor.py")
+        reading = True
+
 startStopButton = tkinter.Button(text="Start/Stop", command=clickStartStopButton)
 startStopButton.place(x=100, y=100)
+
+startStopSensor = tkinter.Button(text="Start/Stop Sensor", command=clickStartStopSensor)
+startStopSensor.place(x=100, y=300)
 
 def update_rpm():
     rpm = database.get_rpm()
