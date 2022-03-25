@@ -45,7 +45,7 @@ def clickStartStopSensor():
         reading = False
         process.terminate()
     else:
-        process = Popen("python /readsensor.py")
+        process = Popen("/readsensor.py")
         reading = True
 
 startStopButton = tkinter.Button(text="Start/Stop", command=clickStartStopButton)
