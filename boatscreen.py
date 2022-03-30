@@ -1,6 +1,8 @@
 import tkinter
 from util import database
-from subprocess import Popen
+import subprocess
+import signal
+import os
 
 screen = tkinter.Tk()
 
@@ -27,25 +29,24 @@ s2plus_label.pack()
 
 running = True
 reading = True
-process = Popen("/readsensor.py")
+
+p = subprocess.Popen(["python3", "readsensor.py"])
 
 def clickStartStopButton():
     global running
     if running:
         running = False
-        #print(running)
     else: 
         running = True
-        #print(running)
 
 def clickStartStopSensor():
     global reading
-    global process
+    global p
     if reading:
+        os.kill(p.pid, signal.SIGSTOP)
         reading = False
-        process.terminate()
     else:
-        process = Popen("/readsensor.py")
+        os.kill(p.pid, signal.SIGCONT)
         reading = True
 
 startStopButton = tkinter.Button(text="Start/Stop", command=clickStartStopButton)
@@ -57,9 +58,10 @@ startStopSensor.place(x=100, y=300)
 def update_rpm():
     rpm = database.get_rpm()
     rpm_label['text'] = 'RPM : ' + str(rpm['RPM'])
-    print(rpm)
-    print(rpm_label)
 
+def calculate_voltage(v_res):
+    return v_res
+ 
 def update_voltage():
     voltage = database.get_voltage()
     voltage_label['text'] = 'Voltage : ' + str(voltage['voltage'])
@@ -67,15 +69,13 @@ def update_voltage():
     s1plus_label['text'] = 'S1+ : ' + str(voltage['s1plus'])
     s2plus_label['text'] = 'S2+ : ' + str(voltage['s2plus'])
     s2minus_label['text'] = 'S2- ' + str(voltage['s2minus'])
-    print(voltage)
-    print(voltage_label)
 
 def scanning():
     if running:
         update_rpm()
         update_voltage()
     else:
-        print("Stopped")
+        print("Running stopped")
 
     screen.after(1000, scanning)
 
