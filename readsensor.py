@@ -14,7 +14,8 @@ if __name__ == "__main__":
 		mongodb_uri = f.readline()
 	client = pymongo.MongoClient(mongodb_uri)
 	db = client.SolarRacingData
-	collection = db.Voltage
+	voltage_collection= db.Voltage
+	gps_collection= db.GPS
 	
 	# I2C Modules: Configuration and Setup
 	i2c = busio.I2C(board.SCL, board.SDA)
@@ -64,6 +65,9 @@ if __name__ == "__main__":
 				print("Track angle: {} degrees".format(gps.track_angle_deg) if gps.track_angle_deg is not None else "Track angle: NO DATA")
 				print("Horizontal dilution: {}".format(gps.horizontal_dilution) if gps.horizontal_dilution is not None else "Horizontal dilution: NO DATA")
 				print("Height geoid: {} meters".format(gps.height_geoid) if gps.height_geoid is not None else "Height geoid: NO DATA")
+				gpsdata = {"latitude": gps.latitude, "longitude": gps.longitude, "fix_quality": gps.fix_quality, "satellites": gps.satellites, "altitude": gps.altitude_m,
+					"speed": gps.speed_knots, "track_angle": gps.track_angle_deg, "horizontal dilution": gps.horizontal_dilution, "height_geoid": gps.height_geoid}
+				gps_collection.insert_one(gpsdata)
 			else:
 				print("Awaiting GPS fix...")
 			print("-" * 20)
@@ -91,7 +95,7 @@ if __name__ == "__main__":
 			print("-" * 20 + "\n")
 			rawvoltage = {'voltage':voltage,'s1minus':s1minus,'s1plus':s1plus,
 			's2minus':s2minus,'s2plus':s2plus,'ISOString':datetime.now().isoformat()}
-			collection.insert_one(rawvoltage)
+			voltage_collection.insert_one(rawvoltage)
 			time.sleep(1)
 	finally:
 		# Clear GPIO configurations and terminate
