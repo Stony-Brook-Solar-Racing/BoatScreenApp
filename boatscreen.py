@@ -85,19 +85,19 @@ def click_stop_sensor():
 def update_speed():
     #speed = database.get_speed()
     speed = 25
-    speed_label['text'] = 'Speed : ' + str(speed) 
+    speed_label['text'] = 'Speed : ' + str(speed) + " Knots"
  
 def update_voltage():
     #battery_state = calculations.calculate_state_of_charge(database.get_v_res())
     battery_state = 25
-    voltage_label['text'] = 'Battery Percentage : ' + str(battery_state)
+    voltage_label['text'] = 'Battery Percentage : ' + str(battery_state) + " %"
 
 def update_power():
     #s1plus = database.get_s1plus()
     #s1minus = database.get_s1minus()
     #power = calculations.calculate_power(s1plus, s1minus)
     power = 25
-    power_label['text'] = 'Power : ' + str(power) 
+    power_label['text'] = 'Power : ' + str(power) + " W"
 
 def scanning():
     if reading:
